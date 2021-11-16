@@ -45,7 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
         {
           "AlertDialog": showDialog1,
           "showMiniAlterDialog": showDialog2,
-          "showCustomizeDialog": showDialog3
+          "showCustomizeDialog": showDialog3,
+          "showInputDialog": showInputDialogDemo,
+          "showConfigDialog": showConfigDialogDemo,
         },
       );
     if (mounted) setState(() {});
@@ -79,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       context,
       '提示',
       '这是一个消息对话框',
-      colorContent: '消息',
+      keyword: '消息',
     );
   }
 
@@ -88,9 +90,31 @@ class _MyHomePageState extends State<MyHomePage> {
       context,
       '提示',
       '这是一个消息对话框' * 8,
-      colorContent: '消息',
+      keyword: '消息',
       barrierDismissible: false,
     );
+  }
+
+  void showInputDialogDemo() async {
+    var data = await showInputDialog(
+      context,
+      '输入框',
+      message: '你的身高决定了你的衣服尺寸！',
+      content: '10',
+      hint: '请输入身高',
+      inputType: const TextInputType.numberWithOptions(decimal: true),
+    );
+    debugPrint(data);
+  }
+
+  void showConfigDialogDemo() async {
+    var data = await showMiniConfirmDialog(
+      context,
+      '提示',
+      '你的身高决定了你的衣服尺寸！',
+      keyword: '身高',
+    );
+    debugPrint(data?.toString());
   }
 
   @override

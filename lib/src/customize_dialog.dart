@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 /// 自定义对话框
 class CustomizeDialog extends Dialog {
-
   /// The `barrierDismissible` argument is used to indicate whether tapping on the
   /// barrier will dismiss the dialog. It is `true` by default and can not be `null`.
   final bool barrierDismissible;

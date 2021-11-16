@@ -9,8 +9,8 @@ class BasicDialog extends StatelessWidget {
     this.titleStyle,
     this.action1,
     this.action2,
-    this.onTap1,
-    this.onTap2,
+    this.action1OnTap,
+    this.action2OnTap,
     this.action1Color,
     this.action2Color,
     this.actionDefaultColor = Colors.blue,
@@ -18,8 +18,8 @@ class BasicDialog extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
-  final VoidCallback? onTap1;
-  final VoidCallback? onTap2;
+  final VoidCallback? action1OnTap;
+  final VoidCallback? action2OnTap;
 
   /// 隐藏标题
   final bool hiddenTitle;
@@ -49,14 +49,14 @@ class BasicDialog extends StatelessWidget {
     if (action1 != null) {
       actions.add(_buildButton(
         label: action1!,
-        onTap: onTap1,
-        labelColor: action1Color ?? Theme.of(context).dividerColor,
+        onTap: action1OnTap ?? () => Navigator.pop(context),
+        labelColor: action1Color ?? Theme.of(context).disabledColor,
       ));
     }
     if (action2 != null) {
       actions.add(_buildButton(
         label: action2!,
-        onTap: onTap2,
+        onTap: action2OnTap,
         labelColor: action2Color ?? Theme.of(context).primaryColor,
       ));
     }

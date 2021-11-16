@@ -1,6 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// 只允许输入小数
+class UsNumberTextInputFormatter extends TextInputFormatter {
+  static const defaultDouble = 0.001;
+
+  static double strToFloat(String str, [double defaultValue = defaultDouble]) {
+    try {
+      return double.parse(str);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue Value) {
+    String value = Value.text;
+    int selectionIndex = Value.selection.end;
+    if (value == ".") {
+      value = "0.";
+      selectionIndex++;
+    } else if (value != "" &&
+        value != defaultDouble.toString() &&
+        strToFloat(value, defaultDouble) == defaultDouble) {
+      value = oldValue.text;
+      selectionIndex = oldValue.selection.end;
+    }
+    return TextEditingValue(
+      text: value,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+}
+
 /// 创建搜索内容
 Widget buildSearchSpan(String content, String searchText,
     {Color searchTextColor = Colors.red,
@@ -28,4 +61,5 @@ Widget buildSearchSpan(String content, String searchText,
   }
 }
 
-void clip(String value) => Clipboard.setData(ClipboardData(text: value ?? ""));
+/// 复制到剪切板
+void clip(String value) => Clipboard.setData(ClipboardData(text: value));
