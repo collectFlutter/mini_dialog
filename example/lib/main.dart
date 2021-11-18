@@ -48,6 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
           "showCustomizeDialog": showDialog3,
           "showInputDialog": showInputDialogDemo,
           "showConfigDialog": showConfigDialogDemo,
+          "showLoadingDialog": showLoadingDialogDemo,
+          "showSuccessDialog": showSuccessDialogDemo,
+          "showFailDialog": showFailDialogDemo,
         },
       );
     if (mounted) setState(() {});
@@ -115,6 +118,41 @@ class _MyHomePageState extends State<MyHomePage> {
       keyword: '身高',
     );
     debugPrint(data?.toString());
+  }
+
+  void showLoadingDialogDemo() async {
+    showLoadingDialog(context);
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  void showSuccessDialogDemo() async {
+    showIconDialog(context, label: '支付成功');
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  void showFailDialogDemo() async {
+    showIconDialog(
+      context,
+      label: '支付失败',
+      icon: Icon(Icons.close, color: Colors.red[600], size: 44),
+      // labelColor: Colors.red[600],
+    );
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        Navigator.pop(context);
+      },
+    );
   }
 
   @override

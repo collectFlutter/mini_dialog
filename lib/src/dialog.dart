@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mini_dialog/src/customize_dialog.dart';
 import 'package:mini_dialog/src/input_dialog.dart';
 import 'basic_dialog.dart';
@@ -6,8 +7,8 @@ import 'tools.dart';
 
 /// 显示自定义对话框
 Future<T?> showMiniCustomizeDialog<T>(
-  BuildContext context,
-  Widget child, {
+  BuildContext context, {
+  required Widget child,
   bool barrierDismissible = false,
 }) async {
   return await showDialog<T>(
@@ -128,5 +129,66 @@ Future<String?> showInputDialog(
         onConfirmCallback: onConfirmCallback,
       );
     },
+  );
+}
+
+showIconDialog(
+  BuildContext context, {
+  String? label,
+  Widget icon = const Icon(Icons.check, color: Colors.green, size: 44),
+  Color? labelColor = Colors.black54,
+}) {
+  showMiniCustomizeDialog(
+    context,
+    child: Material(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white60,
+      child: SizedBox(
+        width: 120,
+        height: 120,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            icon,
+            if (label != null) ...{
+              Text(
+                label,
+                style: TextStyle(color: labelColor),
+              ),
+            }
+          ],
+        ),
+      ),
+    ),
+    barrierDismissible: false,
+  );
+}
+
+showLoadingDialog(BuildContext context, {String? label}) {
+  showMiniCustomizeDialog(
+    context,
+    child: Material(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white70,
+      child: SizedBox(
+        width: 120,
+        height: 120,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const CupertinoActivityIndicator(radius: 20),
+            if (label != null) ...{
+              Text(
+                label,
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+            }
+          ],
+        ),
+      ),
+    ),
+    barrierDismissible: false,
   );
 }
