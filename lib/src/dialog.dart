@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mini_dialog/src/customize_dialog.dart';
-import 'package:mini_dialog/src/input_dialog.dart';
-import 'basic_dialog.dart';
+import 'package:mini_dialog/src/dialog/customize_dialog.dart';
+import 'package:mini_dialog/src/dialog/input_dialog.dart';
+import 'dialog/basic_dialog.dart';
+import 'sheet/bottom_sheet.dart';
+import 'sheet/list_sheet.dart';
 import 'tools.dart';
 
 /// 显示自定义对话框
@@ -15,7 +17,7 @@ Future<T?> showMiniCustomizeDialog<T>(
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (_) {
-      return CustomizeDialog(
+      return MiniCustomizeDialog(
         barrierDismissible: barrierDismissible,
         child: child,
       );
@@ -34,6 +36,8 @@ Future<bool?> showMiniConfirmDialog(
   bool barrierDismissible = false,
   String confirmLabel = '确认',
   String cancelLabel = '取消',
+  Color cancelColor = Colors.grey,
+  Color confirmColor = Colors.blue,
 }) async {
   return showDialog(
     context: context,
@@ -49,8 +53,10 @@ Future<bool?> showMiniConfirmDialog(
           searchTextColor: keywordColor,
         ),
         action1: cancelLabel,
+        action1Color: cancelColor,
         action1OnTap: () => Navigator.pop(context, false),
         action2: confirmLabel,
+        action2Color: confirmColor,
         action2OnTap: () => Navigator.pop(context, true),
       );
     },
@@ -93,7 +99,7 @@ Future<bool?> showMiniAlterDialog(
 }
 
 /// 输入对话框
-Future<String?> showInputDialog(
+Future<String?> showMiniInputDialog(
   BuildContext context,
   String title, {
   String? label,
@@ -115,7 +121,7 @@ Future<String?> showInputDialog(
     context: context,
     barrierDismissible: false,
     builder: (ctx) {
-      return InputDialog(
+      return MiniInputDialog(
         title: title,
         label: label,
         content: content,
@@ -132,7 +138,7 @@ Future<String?> showInputDialog(
   );
 }
 
-showIconDialog(
+showMiniIconDialog(
   BuildContext context, {
   String? label,
   Widget icon = const Icon(Icons.check, color: Colors.green, size: 44),
@@ -142,7 +148,7 @@ showIconDialog(
     context,
     child: Material(
       borderRadius: BorderRadius.circular(8.0),
-      color: Colors.white60,
+      color: Colors.white70,
       child: SizedBox(
         width: 120,
         height: 120,
@@ -165,30 +171,98 @@ showIconDialog(
   );
 }
 
-showLoadingDialog(BuildContext context, {String? label}) {
-  showMiniCustomizeDialog(
-    context,
-    child: Material(
-      borderRadius: BorderRadius.circular(8.0),
-      color: Colors.white70,
-      child: SizedBox(
-        width: 120,
-        height: 120,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const CupertinoActivityIndicator(radius: 20),
-            if (label != null) ...{
-              Text(
-                label,
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-            }
-          ],
-        ),
-      ),
-    ),
-    barrierDismissible: false,
-  );
+showMiniLoadingDialog(BuildContext context, {String? label}) {
+  showMiniIconDialog(context,
+      icon: const CupertinoActivityIndicator(radius: 20),
+      labelColor: Colors.grey[700]);
+}
+
+Future<T?> showMiniBottomPopup<T>(
+  BuildContext context,
+  String title,
+  List<Widget> children, {
+  double? height,
+  Color backgroundColor = Colors.white,
+  Widget operation = const SizedBox(height: 15),
+  VoidCallback? onOk,
+  EdgeInsetsGeometry padding =
+      const EdgeInsets.only(left: 5, right: 5, bottom: 10),
+}) async {
+  return await showCupertinoModalPopup<T>(
+      context: context,
+      builder: (ctx) {
+        return MiniBottomSheet(
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          height: height,
+          children: children,
+          padding: padding,
+          operation: operation,
+          onOk: onOk,
+          backgroundColor: backgroundColor,
+        );
+      });
+}
+
+Future<int?> showMiniListPopup<T>(
+  BuildContext context,
+  String title,
+  List<T> dataSource, {
+  double titleHeight = 60,
+  ToString<T>? toLabel,
+  BuildCheckChild<T>? buildItem,
+  Color backgroundColor = Colors.white,
+  Widget operation = const SizedBox(height: 15),
+  EdgeInsetsGeometry padding =
+      const EdgeInsets.only(left: 5, right: 5, bottom: 10),
+}) async {
+  return await showCupertinoModalPopup<int>(
+      context: context,
+      builder: (ctx) {
+        return MiniListBottomSheet<T>(
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          backgroundColor: backgroundColor,
+          padding: padding,
+          titleHeight: titleHeight,
+          dataSource: dataSource,
+          buildItem: buildItem,
+          toLabel: toLabel,
+          operation: operation,
+        );
+      });
+}
+
+Future<int?> showMiniSearchListPopup<T>(
+  BuildContext context,
+  List<T> dataSource, {
+  required Contains<T> contains,
+  String? hintText,
+  double titleHeight = 60,
+  ToString<T>? toLabel,
+  BuildCheckChild<T>? buildItem,
+  Color backgroundColor = Colors.white,
+  Widget operation = const SizedBox(height: 15),
+  EdgeInsetsGeometry padding =
+      const EdgeInsets.only(left: 5, right: 5, bottom: 10),
+}) async {
+  return await showCupertinoModalPopup<int>(
+      context: context,
+      builder: (ctx) {
+        return MiniSearchListBottomSheet<T>(
+          hintText: hintText,
+          contains: contains,
+          backgroundColor: backgroundColor,
+          padding: padding,
+          titleHeight: titleHeight,
+          dataSource: dataSource,
+          buildItem: buildItem,
+          toLabel: toLabel,
+          operation: operation,
+        );
+      });
 }

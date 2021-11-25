@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mini_dialog/mini_dialog.dart';
 
@@ -31,6 +33,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, Function> fun = {};
+  List<Item> items = List.generate(
+    100,
+    (index) => Item(
+      'JsonYe${index + 1}',
+      height: Random().nextDouble() * 100,
+      sex: Random().nextBool(),
+    ),
+  );
 
   @override
   void initState() {
@@ -45,15 +55,39 @@ class _MyHomePageState extends State<MyHomePage> {
         {
           "AlertDialog": showDialog1,
           "showMiniAlterDialog": showDialog2,
-          "showCustomizeDialog": showDialog3,
-          "showInputDialog": showInputDialogDemo,
-          "showConfigDialog": showConfigDialogDemo,
+          "showMiniAlterDialog2": showDialog3,
+          "showMiniInputDialog": showInputDialogDemo,
+          "showMiniConfirmDialog": showConfirmDialogDemo,
           "showLoadingDialog": showLoadingDialogDemo,
           "showSuccessDialog": showSuccessDialogDemo,
           "showFailDialog": showFailDialogDemo,
+          "showMiniListPopup": showMiniListPopupDemo,
+          "showMiniSearchListPopup": showMiniSearchListPopupDemo,
         },
       );
     if (mounted) setState(() {});
+  }
+
+  void showMiniListPopupDemo() async {
+    var index = await showMiniListPopup<Item>(
+      context,
+      '选择列表',
+      items,
+      toLabel: (i) => i.name,
+    );
+    debugPrint(index?.toString());
+  }
+
+  void showMiniSearchListPopupDemo() async {
+    var index = await showMiniSearchListPopup<Item>(
+      context,
+      items,
+      hintText: '搜索列表',
+      toLabel: (i) => i.name,
+      contains: (Item object, String content) =>
+          object.name.toLowerCase().contains(content.toLowerCase()),
+    );
+    debugPrint(index?.toString());
   }
 
   void showDialog1() {
@@ -99,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showInputDialogDemo() async {
-    var data = await showInputDialog(
+    var data = await showMiniInputDialog(
       context,
       '输入框',
       message: '你的身高决定了你的衣服尺寸！',
@@ -110,18 +144,19 @@ class _MyHomePageState extends State<MyHomePage> {
     debugPrint(data);
   }
 
-  void showConfigDialogDemo() async {
+  void showConfirmDialogDemo() async {
     var data = await showMiniConfirmDialog(
       context,
       '提示',
       '你的身高决定了你的衣服尺寸！',
       keyword: '身高',
+      confirmColor: Colors.red,
     );
     debugPrint(data?.toString());
   }
 
   void showLoadingDialogDemo() async {
-    showLoadingDialog(context);
+    showMiniLoadingDialog(context);
     Future.delayed(
       const Duration(seconds: 2),
       () {
@@ -131,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showSuccessDialogDemo() async {
-    showIconDialog(context, label: '支付成功');
+    showMiniIconDialog(context, label: '支付成功');
     Future.delayed(
       const Duration(seconds: 2),
       () {
@@ -141,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showFailDialogDemo() async {
-    showIconDialog(
+    showMiniIconDialog(
       context,
       label: '支付失败',
       icon: Icon(Icons.close, color: Colors.red[600], size: 44),
@@ -176,4 +211,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+class Item {
+  late String name;
+  double? height;
+  bool? sex;
+
+  Item(this.name, {this.height, this.sex});
+
+  @override
+  String toString() => name;
 }

@@ -15,9 +15,11 @@ class UsNumberTextInputFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue Value) {
-    String value = Value.text;
-    int selectionIndex = Value.selection.end;
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String value = newValue.text;
+    int selectionIndex = newValue.selection.end;
     if (value == ".") {
       value = "0.";
       selectionIndex++;
@@ -63,3 +65,10 @@ Widget buildSearchSpan(String content, String searchText,
 
 /// 复制到剪切板
 void clip(String value) => Clipboard.setData(ClipboardData(text: value));
+
+typedef ToString<T> = String Function(T model);
+
+typedef BuildCheckChild<T> = Widget Function(BuildContext context, T t);
+
+/// 对象的模糊查找
+typedef Contains<T> = bool Function(T object, String content);

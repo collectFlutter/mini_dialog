@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mini_dialog/src/basic_dialog.dart';
+import 'package:mini_dialog/src/dialog/basic_dialog.dart';
 
-import 'tools.dart';
+import '../tools.dart';
 
-class InputDialog extends StatelessWidget {
-  InputDialog({
+class MiniInputDialog extends StatelessWidget {
+  MiniInputDialog({
     Key? key,
     required this.title,
     this.message,
