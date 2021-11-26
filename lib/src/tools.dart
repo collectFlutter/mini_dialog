@@ -37,30 +37,36 @@ class UsNumberTextInputFormatter extends TextInputFormatter {
 }
 
 /// 创建搜索内容
-Widget buildSearchSpan(String content, String searchText,
-    {Color searchTextColor = Colors.red,
-    TextStyle style = const TextStyle(color: Colors.black)}) {
-  int startIndex = content.indexOf(searchText);
-  int endIndex = -1;
-  if (startIndex > -1) {
-    endIndex = startIndex + searchText.length;
-    return RichText(
-        text: TextSpan(
-            text: content.substring(0, startIndex),
-            style: style,
-            children: [
-          TextSpan(
-              //获取剩下的字符串，并让它变成灰色
-              text: searchText,
-              style: style.copyWith(color: searchTextColor)),
-          TextSpan(
-              //获取剩下的字符串，并让它变成灰色
-              text: content.substring(endIndex),
-              style: style)
-        ]));
-  } else {
-    return Text(content, maxLines: null, style: style);
+Widget buildSearchSpan(
+  String content,
+  String searchText, {
+  Color searchTextColor = Colors.red,
+  TextStyle style = const TextStyle(color: Colors.black, fontSize: 16),
+  bool insensitiveCase = true,
+}) {
+  String _content = insensitiveCase ? content.toLowerCase() : content;
+  String _searchText = insensitiveCase ? searchText.toLowerCase() : searchText;
+
+  List<TextSpan> spans = [];
+  int _cLength = _content.length;
+  int _sLength = _searchText.length;
+  int _start = 0;
+  for (int i = 0; _sLength > 0 && i <= _cLength - _sLength; i++) {
+    if (_content.substring(i, i + _sLength) == _searchText) {
+      spans.addAll([
+        TextSpan(text: content.substring(_start, i), style: style),
+        TextSpan(
+            text: content.substring(i, _sLength + i),
+            style: style.copyWith(color: searchTextColor))
+      ]);
+      _start = i + _sLength;
+      i = _start - 1;
+    }
   }
+  if (_start != _cLength) {
+    spans.add(TextSpan(text: content.substring(_start), style: style));
+  }
+  return RichText(text: TextSpan(style: style, children: spans));
 }
 
 /// 复制到剪切板
@@ -68,7 +74,8 @@ void clip(String value) => Clipboard.setData(ClipboardData(text: value));
 
 typedef ToString<T> = String Function(T model);
 
-typedef BuildCheckChild<T> = Widget Function(BuildContext context, T t);
+typedef BuildCheckChild<T> = Widget Function(BuildContext context, T t,
+    [String? highlight]);
 
 /// 对象的模糊查找
 typedef Contains<T> = bool Function(T object, String content);

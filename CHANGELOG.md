@@ -1,3 +1,4 @@
-## 0.2.0
 
-* TODO: Describe initial release.
+## 0.2.0
+- add dialog
+- add sheet

@@ -10,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Item> items = List.generate(
     100,
     (index) => Item(
-      'JsonYe${index + 1}',
+      'JsonYe${index + 1}-jsonye',
       height: Random().nextDouble() * 100,
       sex: Random().nextBool(),
     ),

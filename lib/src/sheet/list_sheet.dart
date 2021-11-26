@@ -24,6 +24,8 @@ class MiniListBottomSheet<T> extends StatelessWidget {
 
   final Widget operation;
 
+  final String? searchKey;
+
   const MiniListBottomSheet(
       {Key? key,
       required this.title,
@@ -36,7 +38,8 @@ class MiniListBottomSheet<T> extends StatelessWidget {
       this.onItemClick,
       this.operation = const SizedBox(
         height: 10,
-      )})
+      ),
+      this.searchKey})
       : super(key: key);
 
   @override
@@ -55,21 +58,18 @@ class MiniListBottomSheet<T> extends StatelessWidget {
       height: _height,
       children: dataSource
           .map((item) => ListTile(
-                onTap: () {
-                  if (onItemClick != null) {
-                    onItemClick!(item);
-                  } else {
-                    Navigator.pop(context, dataSource.indexOf(item));
-                  }
-                },
-                title: buildItem != null
-                    ? buildItem!(context, item)
-                    : Text(
-                        toLabel != null ? toLabel!(item) : item.toString(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-              ))
+              onTap: () {
+                if (onItemClick != null) {
+                  onItemClick!(item);
+                } else {
+                  Navigator.pop(context, dataSource.indexOf(item));
+                }
+              },
+              title: buildItem != null
+                  ? buildItem!(context, item, searchKey)
+                  : buildSearchSpan(
+                      toLabel != null ? toLabel!(item) : item.toString(),
+                      searchKey ?? '')))
           .toList(),
       operation: operation,
     );
@@ -145,6 +145,7 @@ class _MiniSearchListBottomSheetState<T>
       dataSource: _list,
       toLabel: widget.toLabel,
       buildItem: widget.buildItem,
+      searchKey: _searchKey,
       onItemClick: (item) => Navigator.pop(
         context,
         widget.dataSource.indexOf(item),
