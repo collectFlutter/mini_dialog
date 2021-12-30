@@ -92,6 +92,7 @@ class MiniBottomSheet extends StatelessWidget {
                   const SizedBox(height: 5),
                   Expanded(
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(right: 5),
                       child: Column(children: children),
                     ),
                   ),

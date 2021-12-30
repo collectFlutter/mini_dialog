@@ -1,6 +1,6 @@
 name: mini_dialog
 description: The encapsulation of frequently used dialog boxes helps to use dialog boxes quickly.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/collectFlutter/mini_dialog
 
 environment:
